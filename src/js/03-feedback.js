@@ -8,7 +8,6 @@ formEl.addEventListener('input', throttle(handleInput, 500));
 formEl.addEventListener('submit', handleSubmit);
 
 let formInputs = {};
-const formData = JSON.parse(localStorage.getItem('feedback-form-state'));
 
 updateForm();
 
@@ -17,16 +16,22 @@ function handleInput(e) {
   localStorage.setItem('feedback-form-state', JSON.stringify(formInputs));
 }
 
+function handleSubmit(e) {
+  e.preventDefault();
+  const formData = getFormData();
+  console.log(formData);
+  e.currentTarget.reset();
+  localStorage.removeItem('feedback-form-state');
+}
+
 function updateForm() {
+  const formData = getFormData();
   if (formData) {
     inputEl.value = formData.email;
     textareaEl.value = formData.message;
   }
 }
 
-function handleSubmit(e) {
-  e.preventDefault();
-  e.currentTarget.reset();
-  console.log(formData);
-  localStorage.removeItem('feedback-form-state');
+function getFormData() {
+  return JSON.parse(localStorage.getItem('feedback-form-state'));
 }
